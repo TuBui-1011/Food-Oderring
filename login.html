@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login - Food Ordering</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <!--JQUERY CDN-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #f2f2f2;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        width: 850px;
+        height: 500px;
+        background: #fff;
+        display: flex;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-section {
+        flex: 1;
+        padding: 60px 40px;
+      }
+
+      .form-section h2 {
+        color: #10b981;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .form-section input {
+        width: 100%;
+        padding: 10px 15px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
+      .form-section button {
+        width: 100%;
+        padding: 12px;
+        background-color: #10b981;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      .form-section button:hover {
+        background-color: #0e9e6e;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .form-section .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 10px;
+      }
+
+      .form-section .social-icons i {
+        background: #f2f2f2;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .right-section {
+        flex: 1;
+        background: #10b981;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .right-section h2 {
+        margin-bottom: 10px;
+      }
+
+      .right-section button {
+        background: transparent;
+        border: 2px solid white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      body.fade-out {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-section">
+        <h2>Sign in to Account</h2>
+        <div class="social-icons">
+          <i class="fab fa-facebook-f"></i>
+          <i class="fab fa-linkedin-in"></i>
+          <i class="fab fa-google"></i>
+        </div>
+        <p style="text-align: center">or use your email account</p>
+        <form id="login-form">
+          <input type="email" placeholder="Email" id="email" />
+          <input type="password" placeholder="Password" id="password" />
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin: 10px 0;
+          "
+        >
+          <label style="display: flex; align-items: center; gap: 5px">
+            <input type="checkbox" /> Remember me
+          </label>
+          <a href="#" style="color: #10b981; text-decoration: none"
+            >Forgot password?</a
+          >
+        </div>
+
+        <button>Sign In</button>
+      </div>
+      <div class="right-section">
+        <h2>Hello, Friend!</h2>
+        <p>Fill up personal information and start journey with us.</p>
+        <button>Sign Up</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function() {
+      "use strict";
+      $("#login-form").on("submit", function(e) {
+      e.preventDefault();
+      
+      var vEmail = $("#email").val().trim();
+      var vPassword = $("#password").val().trim();
+
+    // Kiểm tra dữ liệu nhập vào 
+    if (vEmail === "" || vPassword === "") {
+          alert("Please enter both email and password.");
+          return;
+        }
+
+        // Hiệu ứng fade-out rồi chuyển trang
+        document.body.classList.add("fade-out");
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 600); // phải trùng với CSS transition time
+      })
+    });
+  </script>
+</html>
