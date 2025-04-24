@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> All APIs sample cho Devcamp Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    .divider {
+        border-bottom: 2px solid #0163ee;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        width: 23rem;
+    }
+</style>
+<script>
+    const gREQUEST_STATUS_OK = 200;
+    const gREQUEST_CREATE_OK = 201; // status 201 là tạo mới thành công
+    const gREQUEST_READY_STATUS_FINISH_AND_OK = 4;
+
+    var gBASE_URL = "https://64747ed27de100807b1b0fa4.mockapi.io/api/v1/";
+
+    // API lấy danh sách Pizza
+    function onGetPizzaListClick() {
+        var vAPI_URL = gBASE_URL + "/pizza";
+        var vXhttp = new XMLHttpRequest();
+        vXhttp.onreadystatechange = function () {
+            if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+                console.log(vXhttp.responseText); // ghi response text ra console.log
+            }
+        };
+        vXhttp.open("GET", vAPI_URL, true);
+        vXhttp.send();
+    }
+
+    // API lấy danh sách Blogs
+    function onGetBlogsListClick() {
+        var vAPI_URL = gBASE_URL + "/blogs";
+        var vXhttp = new XMLHttpRequest();
+        vXhttp.onreadystatechange = function () {
+            if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+                console.log(vXhttp.responseText); // ghi response text ra console.log
+            }
+        };
+        vXhttp.open("GET", vAPI_URL, true);
+        vXhttp.send();
+    }
+</script>
+
+<body>
+    <div class="container mt-4">
+        <div class="row form-group">
+            <strong class="text-danger"> Bật console log để nhìn rõ output </strong>
+        </div>
+        <div class="row form-group">
+            <p id="testP" class="h4"> Demo APIs cho dự án Food Ordering: </p>
+        </div>
+        <div class="row form-group">
+            <button class="btn btn-info m-1" onclick="onGetPizzaListClick()">Lấy danh sách Pizza</button>
+            <button class="btn btn-warning m-1" onclick="onGetBlogsListClick()">Lấy danh sách Blogs</button>
+        </div>
+    </div>
+</body>
+
+</html>
