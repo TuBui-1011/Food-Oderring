@@ -163,12 +163,18 @@
         padding: 8px;
         font-size: 14px;
       }
+        #login-form .login-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
     }
-    .right-section button:hover {
-  background-color: white;
-  color: #10b981;
-  transition: all 0.3s ease;
-}
+        .right-section button:hover {
+      background-color: white;
+      color: #10b981;
+      transition: all 0.3s ease;
+    }
 
     </style>
   </head>
@@ -185,22 +191,19 @@
         <form id="login-form">
           <input type="email" placeholder="Email" id="email" />
           <input type="password" placeholder="Password" id="password" />
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            margin: 10px 0;
-          "
-        >
-          <label style="display: flex; align-items: center; gap: 5px">
+          <div class="login-options" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 14px;
+          margin: 10px 0;
+        ">
+          <label style="display: flex; align-items: center; gap: 5px;">
             <input type="checkbox" /> Remember me
           </label>
-          <a href="#" style="color: #10b981; text-decoration: none"
-            >Forgot password?</a
-          >
+          <a href="#" style="color: #10b981; text-decoration: none;">Forgot password?</a>
         </div>
+        
 
         <button>Sign In</button>
       </div>
