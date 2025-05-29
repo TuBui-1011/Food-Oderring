@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>All APIs sample cho Devcamp Project</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <style>
+    .divider {
+      border-bottom: 2px solid #0163ee;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      width: 23rem;
+    }
+  </style>
+  <script>
+    const gREQUEST_STATUS_OK = 200;
+    const gREQUEST_CREATE_OK = 201; // status 201 là tạo mới thành công
+    const gREQUEST_READY_STATUS_FINISH_AND_OK = 4;
+
+    var gBASE_URL = "https://food-ordering-fvo9.onrender.com/api";
+
+    // API lấy danh sách Pizza
+    function onGetPizzaListClick() {
+      var vAPI_URL = gBASE_URL + "/foods";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+
+          // Thông tin một món ăn (Chú ý trường id của món ăn (*))
+          //{
+          //    "id":1, (*)
+          //    "name":"Seafood Homemade Pizza",
+          //    "imageUrl":"https://devcamp-images.netlify.app/MqT0asuoIcU.png",
+          //    "price":19,
+          //    "rating":3.5,
+          //    "time":"50-70min",
+          //    "createdAt":"2023-06-07T13:49:13.000Z",
+          //    "updatedAt":"2023-06-07T13:49:13.000Z"
+          //}
+        }
+      };
+      vXhttp.open("GET", vAPI_URL, true);
+      vXhttp.send();
+    }
+
+    // API lấy danh sách Blogs
+    function onGetBlogsListClick() {
+      var vAPI_URL = gBASE_URL + "/blogs";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+        }
+      };
+      vXhttp.open("GET", vAPI_URL, true);
+      vXhttp.send();
+    }
+
+    // API lấy danh sách Blogs
+    function onGetBlogsListClick() {
+      var vAPI_URL = gBASE_URL + "/blogs";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+        }
+      };
+      vXhttp.open("GET", vAPI_URL, true);
+      vXhttp.send();
+    }
+
+    // API lấy danh sách Vouchers
+    function onGetVouchersListClick() {
+      var vAPI_URL = gBASE_URL + "/vouchers";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+        }
+      };
+      vXhttp.open("GET", vAPI_URL, true);
+      vXhttp.send();
+    }
+
+    // API kiểm tra voucher hợp lệ
+    function onCheckVoucherListClick() {
+      // Mã 10056 là mã có tồn tại (Khi nhập vào có trừ tiền)
+      var vQueryVoucherCode = {
+        voucherCode: "10056",
+      };
+
+      var vSearchParams = new URLSearchParams(vQueryVoucherCode);
+
+      var vAPI_URL = gBASE_URL + "/vouchers" + "?" + vSearchParams.toString();
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+
+          // Thông tin voucher (Chú ý trường id của voucher (**))
+          // {
+          //     "id": 1, (**)
+          //     "voucherCode": "10056",
+          //     "discount": 20,
+          //     "createdAt": "2023-06-07T18:09:08.000Z",
+          //     "updatedAt": "2023-06-07T18:09:08.000Z"
+          // }
+        }
+      };
+      vXhttp.open("GET", vAPI_URL, true);
+      vXhttp.send();
+    }
+
+    // API tạo đơn hàng nếu có mã giảm giá
+    function onCreateOrderWithOrderClick() {
+      var vOrderCreate = {
+        firstName: "Quang",
+        lastName: "Trần Văn",
+        // Chú ý validate email
+        email: "quangtv@devcamp.edu.vn",
+        address: "Hà Nội",
+        phone: "0123456789",
+        // Payment method là 1 trong 3 giá trị: CreditCard - Paypal - BankTransfer
+        methodPayment: "CreditCard",
+        // Voucher id lấy giá trị id khi kiểm tra mã giảm giá (Xem cấu trúc phần (**))
+        voucherId: 1,
+        details: [
+          {
+            // Food id là id của món ăn khi thêm sản phẩm vào giỏ hàng (Xem cấu trúc phần (*))
+            foodId: 1,
+            // Số lượng món ăn tương ứng
+            quantity: 2,
+          },
+          // Món ăn thứ 2 trong giỏ hàng
+          {
+            foodId: 2,
+            quantity: 1,
+          },
+        ],
+      };
+
+      var vAPI_URL = gBASE_URL + "/orders";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+
+          // Cấu trúc đơn hàng trả về (Có thêm một trường orderCode là mã đơn hàng)
+          // {
+          //     "orderCode": "D7Z3QT",
+          //     "id": 6,
+          //     "firstName": "Quang",
+          //     "lastName": "Trần Văn",
+          //     "email": "quangtv@devcamp.edu.vn",
+          //     "address": "Hà Nội",
+          //     "phone": "0123456789",
+          //     "methodPayment": "CreditCard",
+          //     "voucherId": 1,
+          //     "updatedAt": "2023-06-07T18:57:40.865Z",
+          //     "createdAt": "2023-06-07T18:57:40.865Z"
+          // }
+        }
+      };
+      vXhttp.open("POST", vAPI_URL, true);
+      vXhttp.setRequestHeader("Content-Type", "application/json");
+      vXhttp.send(JSON.stringify(vOrderCreate));
+    }
+
+    // API tạo đơn hàng nếu không có mã giảm giá
+    function onCreateOrderWithoutOrderClick() {
+      // vOrderCreate không có thuộc tính voucherId
+      var vOrderCreate = {
+        firstName: "Quang",
+        lastName: "Trần Văn",
+        // Chú ý validate email
+        email: "quangtv@devcamp.edu.vn",
+        address: "Hà Nội",
+        phone: "0123456789",
+        // Payment method là 1 trong 3 giá trị: CreditCard - Paypal - BankTransfer
+        methodPayment: "CreditCard",
+        details: [
+          {
+            // Food id là id của món ăn khi thêm sản phẩm vào giỏ hàng (Xem cấu trúc phần (*))
+            foodId: 1,
+            // Số lượng món ăn tương ứng
+            quantity: 2,
+          },
+          // Món ăn thứ 2 trong giỏ hàng
+          {
+            foodId: 2,
+            quantity: 1,
+          },
+        ],
+      };
+
+      var vAPI_URL = gBASE_URL + "/orders";
+      var vXhttp = new XMLHttpRequest();
+      vXhttp.onreadystatechange = function () {
+        if (
+          this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK &&
+          this.status == gREQUEST_STATUS_OK
+        ) {
+          console.log(vXhttp.responseText); // ghi response text ra console.log
+
+          // Cấu trúc đơn hàng trả về (Có thêm một trường orderCode là mã đơn hàng)
+          // {
+          //     "orderCode": "C8D2ZU",
+          //     "id": 7,
+          //     "firstName": "Quang",
+          //     "lastName": "Trần Văn",
+          //     "email": "quangtv@devcamp.edu.vn",
+          //     "address": "Hà Nội",
+          //     "phone": "0123456789",
+          //     "methodPayment": "CreditCard",
+          //     "updatedAt": "2023-06-07T19:00:03.878Z",
+          //     "createdAt": "2023-06-07T19:00:03.878Z"
+          // }
+        }
+      };
+      vXhttp.open("POST", vAPI_URL, true);
+      vXhttp.setRequestHeader("Content-Type", "application/json");
+      vXhttp.send(JSON.stringify(vOrderCreate));
+    }
+  </script>
+
+  <body>
+    <div class="container mt-4">
+      <div class="row form-group">
+        <strong class="text-danger"> Bật console log để nhìn rõ output </strong>
+      </div>
+      <div class="row form-group">
+        <p id="testP" class="h4">Demo APIs cho dự án Food Ordering:</p>
+      </div>
+      <div class="row form-group">
+        <button class="btn btn-info m-1" onclick="onGetPizzaListClick()">
+          Lấy danh sách Pizza (v2.1)
+        </button>
+        <button class="btn btn-warning m-1" onclick="onGetBlogsListClick()">
+          Lấy danh sách Blogs (v2.1)
+        </button>
+        <button class="btn btn-light m-1" onclick="onGetVouchersListClick()">
+          Lấy danh sách Vouchers - Sử dụng để lấy mã nhập vào ô Voucher code
+        </button>
+        <button class="btn btn-danger m-1" onclick="onCheckVoucherListClick()">
+          Kiểm tra mã voucher hợp lệ - Sử dụng để lấy phần trăm giảm giá khi
+          nhập đúng mã
+        </button>
+        <button
+          class="btn btn-primary m-1"
+          onclick="onCreateOrderWithOrderClick()"
+        >
+          API tạo đơn hàng nếu có mã giảm giá
+        </button>
+        <button
+          class="btn btn-success m-1"
+          onclick="onCreateOrderWithoutOrderClick()"
+        >
+          API tạo đơn hàng nếu không có mã giảm giá
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

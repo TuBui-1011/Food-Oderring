@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Giỏ hàng - What2Eat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap 4 -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- jQuery & Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Nunito", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        flex: 1 0 auto;
+      }
+
+      footer {
+        flex-shrink: 0;
+        width: 100%;
+        background-color: #198754;
+        color: white;
+        padding-top: 1rem;
+        margin-top: auto;
+      }
+
+      .cart-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 3px;
+      }
+      .empty-cart {
+        text-align: center;
+        padding: 50px 0;
+      }
+      .empty-cart i {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+      }
+      .breadcrumb {
+        background: none;
+        padding-left: 0;
+      }
+      .breadcrumb-item a {
+        color: #1ac073;
+      }
+      .breadcrumb-item.active {
+        color: #6c757d;
+      }
+      .quantity-control {
+        width: 80px;
+      }
+      .table th {
+        border-top: none;
+      }
+      .cart-summary {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+      }
+      .product-info {
+        padding-left: 8px;
+      }
+      .product-info h6 {
+        margin-bottom: 2px;
+        font-size: 0.85rem;
+      }
+      .product-info small {
+        color: #6c757d;
+        font-size: 0.75rem;
+      }
+      .remove-item {
+        padding: 0;
+        text-decoration: none !important;
+      }
+      .remove-item:hover {
+        color: #dc3545 !important;
+        opacity: 0.8;
+      }
+
+      /* Payment Modal Styles */
+      .modal-content {
+        border-radius: 10px;
+        border: none;
+      }
+
+      .modal-header {
+        padding: 1.5rem;
+      }
+
+      .modal-header .close {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        color: #1ac073;
+      }
+
+      .badge {
+        width: 30px;
+        height: 30px;
+        line-height: 20px;
+        font-size: 14px;
+      }
+
+      .badge-success {
+        background-color: #1ac073;
+      }
+
+      .form-control {
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        padding: 0.75rem;
+        background-color: #f8f9fa;
+      }
+
+      .form-control:focus {
+        box-shadow: none;
+        border-color: #1ac073;
+      }
+
+      .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: #1ac073;
+        border-color: #1ac073;
+      }
+
+      .custom-control-label {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        margin-bottom: 0;
+      }
+
+      .custom-control-label i {
+        margin-right: 10px;
+      }
+
+      .custom-control-input:checked ~ .custom-control-label {
+        background-color: #e8f8f1;
+        border-color: #1ac073;
+      }
+
+      .btn-success {
+        background-color: #1ac073;
+        border-color: #1ac073;
+      }
+
+      .btn-success:hover {
+        background-color: #15a562;
+        border-color: #15a562;
+      }
+
+      /* Animation cho success icon */
+      .success-icon {
+        animation: scaleIn 0.3s ease-in-out;
+      }
+
+      @keyframes scaleIn {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar Header -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      style="background-color: #1ac073"
+    >
+      <div class="container">
+        <a class="navbar-brand" href="#">WHAT2EAT</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+          </ul>
+        </div>
+        <!-- Icon buttons Search & Cart -->
+        <div class="navbar-icons d-flex">
+          <a href="#" class="nav-link text-white">
+            <i class="fas fa-search"></i>
+          </a>
+          <a href="cart.html" class="nav-link text-white position-relative">
+            <i class="fas fa-shopping-cart"></i>
+            <span
+              class="badge badge-danger position-absolute"
+              style="top: 0; right: 0; font-size: 0.6rem"
+            ></span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Wrap main content in main tag -->
+    <main>
+      <!-- Cart Section -->
+      <div class="container my-5">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="foodordering2.0.html">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="foodordering2.0.html">Trending</a>
+            </li>
+            <li class="breadcrumb-item active">Famous Tandoor</li>
+          </ol>
+        </nav>
+
+        <div class="row">
+          <div class="col-lg-8">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>PRODUCT</th>
+                  <th>PRICE</th>
+                  <th>QTY</th>
+                  <th>UNIT PRICE</th>
+                </tr>
+              </thead>
+              <tbody id="cart-items">
+                <!-- Cart items will be loader here -->
+              </tbody>
+            </table>
+
+            <div class="d-flex align-items-center mt-4">
+              <input
+                type="text"
+                class="form-control mr-2"
+                id="voucher-input"
+                placeholder="Voucher code"
+              />
+              <button class="btn btn-success" id="redeem-btn">Redeem</button>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="cart-summary">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Shipping fee</span>
+                <span>$20</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Coupon</span>
+                <span id="discount-amount">No</span>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between mb-4">
+                <strong>TOTAL</strong>
+                <strong id="total">$0.00</strong>
+              </div>
+              <button class="btn btn-success btn-block" data-toggle="modal" data-target="#paymentModal">Check Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title w-100 text-center text-success" id="paymentModalLabel">Make Payment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center mb-4">
+              <div class="d-inline-block">
+                <span class="badge badge-success rounded-circle p-2" id="step1-badge">1</span>
+                <span class="badge badge-light rounded-circle p-2 ml-2" id="step2-badge">2</span>
+              </div>
+            </div>
+
+            <!-- Step 1: Payment Form -->
+            <div id="payment-form-step">
+              <form id="paymentForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" placeholder="First Name" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <input type="text" class="form-control" placeholder="Last Name" required>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <input type="email" class="form-control" placeholder="Email Address" required>
+                </div>
+                <div class="mb-3">
+                  <textarea class="form-control" placeholder="Address for Delivery" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <input type="tel" class="form-control" placeholder="Mobile Phone" required>
+                </div>
+                <div class="mb-4">
+                  <label class="d-block text-success">Select Method Of Payment</label>
+                  <div class="custom-control custom-radio mb-2">
+                    <input type="radio" id="creditCard" name="paymentMethod" class="custom-control-input" checked>
+                    <label class="custom-control-label" for="creditCard">
+                      <i class="far fa-credit-card text-success"></i> Credit Card Or Debit
+                    </label>
+                  </div>
+                  <div class="custom-control custom-radio mb-2">
+                    <input type="radio" id="paypal" name="paymentMethod" class="custom-control-input">
+                    <label class="custom-control-label" for="paypal">
+                      <i class="fab fa-paypal text-primary"></i> Paypal
+                    </label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" id="bankTransfer" name="paymentMethod" class="custom-control-input">
+                    <label class="custom-control-label" for="bankTransfer">
+                      <i class="fas fa-university text-success"></i> Bank Transfer
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Go to Payment</button>
+              </form>
+            </div>
+
+            <!-- Step 2: Success Message -->
+            <div id="success-step" style="display: none;" class="text-center">
+              <div class="success-icon mb-4">
+                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+              </div>
+              <h4 class="text-dark mb-4">Success</h4>
+              <p class="text-muted mb-4">Your order has been placed successfully!</p>
+              <p class="mb-4">Order Code: <strong id="order-code"></strong></p>
+              <button class="btn btn-success btn-block" onclick="window.location.href='foodordering2.0.html'">
+                Complete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-white">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Logo / Brand -->
+          <div class="col-md-4 text-center text-md-left mb-3 mb-md-0">
+            <a href="#" class="navbar-brand text-white m-0 p-0">WHAT2EAT</a>
+          </div>
+
+          <!-- Menu links -->
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item mx-2">
+                <a href="#" class="text-white">Home</a>
+              </li>
+              <li class="list-inline-item mx-2">
+                <a href="#" class="text-white">About</a>
+              </li>
+              <li class="list-inline-item mx-2">
+                <a href="#" class="text-white">Menu</a>
+              </li>
+              <li class="list-inline-item mx-2">
+                <a href="#" class="text-white">Blog</a>
+              </li>
+              <li class="list-inline-item mx-2">
+                <a href="#" class="text-white">Contact</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Social icons -->
+          <div class="col-md-4 text-center text-md-right">
+            <a href="#" class="text-white mx-2"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="text-white mx-2"
+              ><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
+
+        <!-- Divider line -->
+        <hr class="border-light my-3" />
+
+        <!-- Copyright -->
+        <div class="row">
+          <div class="col text-center">
+            <small>Copyright ©2021 What2Eat</small>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        // ===== KHỞI TẠO CÁC BIẾN CHÍNH =====
+        let gCart = localStorage.getItem("cart"); // Lấy dữ liệu giỏ hàng từ localStorage
+        const cartContainer = $("#cart-items"); // Container chứa các sản phẩm trong giỏ
+        let currentDiscount = 0; // Lưu % giảm giá hiện tại từ voucher
+        let subtotalAmount = 0; // Tổng tiền chưa tính giảm giá và phí ship
+
+        // ===== TÍNH TOÁN VÀ HIỂN THỊ TỔNG TIỀN =====
+        function updateTotalAmount() {
+          const shippingFee = 20; // Phí ship cố định
+          const discountAmount = (subtotalAmount * currentDiscount) / 100; // Tính số tiền được giảm
+          
+          // Hiển thị số tiền giảm giá (nếu có)
+          $("#discount-amount").text(
+            currentDiscount > 0
+              ? `-$${discountAmount.toFixed(2)} (${currentDiscount}%)`
+              : "No"
+          );
+          
+          // Cập nhật tổng tiền = subtotal + ship - giảm giá
+          $("#total").text(
+            `$${(subtotalAmount + shippingFee - discountAmount).toFixed(2)}`
+          );
+        }
+
+        // ===== HIỂN THỊ GIỎ HÀNG =====
+        if (gCart) {
+          gCart = JSON.parse(gCart);
+          if (gCart.length > 0) {
+            // Tính tổng tiền và hiển thị từng sản phẩm
+            subtotalAmount = 0;
+            gCart.forEach((item, index) => {
+              const itemTotal = item.price * item.quantity;
+              subtotalAmount += itemTotal;
+              
+              // Tạo HTML cho mỗi sản phẩm trong giỏ hàng
+              cartContainer.append(`
+                <tr>
+                  <td class="cart-item">
+                    <div class="d-flex align-items-center">
+                      <img src="${
+                        item.imageUrl || "https://via.placeholder.com/20"
+                      }" alt="${item.name}">
+                      <div class="product-info">
+                        <h6 class="mb-0">${item.name}</h6>
+                        <small class="text-muted">Home made pizza</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$${item.price}</td>
+                  <td>
+                    <div class="input-group quantity-control">
+                      <input type="number" class="form-control" value="${
+                        item.quantity
+                      }" min="1" data-index="${index}">
+                    </div>
+                  </td>
+                  <td>
+                    $${itemTotal.toFixed(2)}
+                    <br>
+                    <button type="button" class="btn btn-link text-danger remove-item p-0" onclick="removeItem(${index})">
+                      <small>Remove Item</small>
+                    </button>
+                  </td>
+                </tr>
+              `);
+            });
+
+            // Cập nhật hiển thị tổng tiền ban đầu
+            $("#subtotal").text(`$${subtotalAmount.toFixed(2)}`);
+            updateTotalAmount();
+
+            // ===== XỬ LÝ THAY ĐỔI SỐ LƯỢNG SẢN PHẨM =====
+            $(".quantity-control input").change(function () {
+              const index = $(this).data("index");
+              const newQuantity = parseInt($(this).val());
+              if (newQuantity > 0) {
+                gCart[index].quantity = newQuantity;
+                localStorage.setItem("cart", JSON.stringify(gCart));
+                location.reload(); // Tải lại trang để cập nhật giỏ hàng
+              }
+            });
+
+            // ===== XỬ LÝ NHẬP VÀ KIỂM TRA MÃ GIẢM GIÁ =====
+            $("#redeem-btn").click(function () {
+              const gVoucherCode = $("#voucher-input").val().trim();
+              
+              // Kiểm tra xem đã nhập mã chưa
+              if (!gVoucherCode) {
+                alert("Please enter a voucher code!");
+                return;
+              }
+
+              // Gọi API kiểm tra mã giảm giá
+              const vAPI_URL =
+                "https://food-ordering-fvo9.onrender.com/api/vouchers?voucherCode=" +
+                gVoucherCode;
+
+              // Gửi request kiểm tra voucher
+              $.ajax({
+                url: vAPI_URL,
+                method: "GET",
+                success: function (response) {
+                  if (Array.isArray(response) && response.length > 0) {
+                    const voucher = response[0];
+                    if (voucher.discount) {
+                      // Áp dụng giảm giá nếu voucher hợp lệ
+                      currentDiscount = voucher.discount;
+                      updateTotalAmount();
+                      alert(
+                        `Voucher applied successfully! You got ${voucher.discount}% discount.`
+                      );
+                      // Lưu ID voucher để dùng khi checkout
+                      localStorage.setItem("currentVoucherId", voucher.id);
+                    } else {
+                      alert("Invalid voucher code!");
+                    }
+                  } else {
+                    alert("Invalid voucher code!");
+                  }
+                },
+                error: function () {
+                  alert("Error checking voucher. Please try again!");
+                },
+              });
+            });
+          } else {
+            // Hiển thị giao diện giỏ hàng trống
+            showEmptyCart();
+          }
+        } else {
+          // Hiển thị giao diện giỏ hàng trống
+          showEmptyCart();
+        }
+
+        // ===== HIỂN THỊ GIAO DIỆN GIỎ HÀNG TRỐNG =====
+        function showEmptyCart() {
+          $(".table").hide();
+          cartContainer.parent().append(`
+            <div class="empty-cart">
+              <i class="fas fa-shopping-cart"></i>
+              <h3>Giỏ hàng trống</h3>
+              <p>Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
+              <a href="foodordering2.0.html" class="btn btn-success">Tiếp tục mua sắm</a>
+            </div>
+          `);
+        }
+
+        // ===== XỬ LÝ SUBMIT FORM THANH TOÁN =====
+        $("#paymentForm").on("submit", function(e) {
+          e.preventDefault();
+          
+          // 1. Thu thập dữ liệu từ form
+          const gFormData = {
+            firstName: $("#paymentForm input[placeholder='First Name']").val().trim(),
+            lastName: $("#paymentForm input[placeholder='Last Name']").val().trim(),
+            email: $("#paymentForm input[type='email']").val().trim(),
+            address: $("#paymentForm textarea").val().trim(),
+            phone: $("#paymentForm input[type='tel']").val().trim(),
+            methodPayment: "", // Sẽ được set dựa vào radio button được chọn
+            details: []
+          };
+
+          // 2. Xử lý phương thức thanh toán được chọn
+          const selectedPayment = $("input[name='paymentMethod']:checked").attr("id");
+          switch (selectedPayment) {
+            case "creditCard":
+              gFormData.methodPayment = "CreditCard";
+              break;
+            case "paypal":
+              gFormData.methodPayment = "Paypal";
+              break;
+            case "bankTransfer":
+              gFormData.methodPayment = "BankTransfer";
+              break;
+            default:
+              alert("Vui lòng chọn phương thức thanh toán!");
+              return;
+          }
+
+          // 3. Kiểm tra giỏ hàng có sản phẩm không
+          if (!gCart || gCart.length === 0) {
+            alert("Giỏ hàng trống, vui lòng thêm món ăn vào giỏ hàng!");
+            return;
+          }
+
+          // 4. Xử lý chi tiết đơn hàng
+          try {
+            // Sử dụng object để gom nhóm các món ăn trùng nhau
+            const foodItems = {};
+            
+            gCart.forEach((item) => {
+              // Kiểm tra dữ liệu hợp lệ
+              const foodId = parseInt(item.id);
+              const quantity = parseInt(item.quantity);
+
+              if (isNaN(foodId) || isNaN(quantity)) {
+                throw new Error("Dữ liệu món ăn không hợp lệ");
+              }
+
+              if (quantity <= 0) {
+                throw new Error("Số lượng món ăn phải lớn hơn 0");
+              }
+
+              // Gom nhóm các món ăn có cùng ID
+              if (foodItems[foodId]) {
+                foodItems[foodId] += quantity;
+              } else {
+                foodItems[foodId] = quantity;
+              }
+            });
+
+            // Chuyển đổi từ object sang array để gửi đi
+            gFormData.details = Object.keys(foodItems).map(foodId => ({
+              foodId: parseInt(foodId),
+              quantity: foodItems[foodId]
+            }));
+
+          } catch (error) {
+            alert(error.message);
+            return;
+          }
+
+          // 5. Kiểm tra chi tiết đơn hàng
+          if (gFormData.details.length === 0) {
+            alert("Không thể xử lý thông tin món ăn trong giỏ hàng!");
+            return;
+          }
+
+          // 6. Validate dữ liệu input
+          const errors = [];
+          
+          // Kiểm tra các trường bắt buộc
+          if (!gFormData.firstName) errors.push("Vui lòng nhập Họ");
+          if (!gFormData.lastName) errors.push("Vui lòng nhập Tên");
+          if (!gFormData.address) errors.push("Vui lòng nhập Địa chỉ");
+          if (!gFormData.phone) errors.push("Vui lòng nhập Số điện thoại");
+          
+          // Kiểm tra định dạng email
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!gFormData.email) {
+            errors.push("Vui lòng nhập Email");
+          } else if (!emailRegex.test(gFormData.email)) {
+            errors.push("Email không đúng định dạng");
+          }
+
+          // Hiển thị lỗi nếu có
+          if (errors.length > 0) {
+            alert(errors.join("\n"));
+            return;
+          }
+
+          // 7. Chuẩn bị dữ liệu để gửi API
+          const orderData = {
+            firstName: gFormData.firstName,
+            lastName: gFormData.lastName,
+            email: gFormData.email,
+            address: gFormData.address,
+            phone: gFormData.phone,
+            methodPayment: gFormData.methodPayment,
+            details: gFormData.details
+          };
+
+          // Thêm voucherId nếu có voucher hợp lệ
+          const voucherId = localStorage.getItem("currentVoucherId");
+          if (voucherId && voucherId !== "null" && voucherId !== "undefined") {
+            const voucherIdNumber = parseInt(voucherId);
+            if (!isNaN(voucherIdNumber)) {
+              orderData.voucherId = voucherIdNumber;
+            }
+          }
+
+          // 8. Gọi API đặt hàng
+          $.ajax({
+            url: "https://food-ordering-fvo9.onrender.com/api/orders",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(orderData),
+            success: function(response) {
+              // Xóa giỏ hàng và voucher
+              localStorage.removeItem("cart");
+              localStorage.removeItem("currentVoucherId");
+              
+              // Hiển thị step success
+              $("#payment-form-step").hide();
+              $("#success-step").show();
+              
+              // Cập nhật trạng thái badge
+              $("#step1-badge").removeClass("badge-success").addClass("badge-light");
+              $("#step2-badge").removeClass("badge-light").addClass("badge-success");
+              
+              // Hiển thị mã đơn hàng
+              $("#order-code").text(response.orderCode);
+            },
+            error: function(xhr, status, error) {
+              // Log lỗi để debug
+              console.error("Chi tiết lỗi:", {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                responseText: xhr.responseText
+              });
+              
+              // Hiển thị thông báo lỗi chi tiết
+              let errorMessage = "Có lỗi xảy ra khi đặt hàng. ";
+              
+              try {
+                const errorResponse = JSON.parse(xhr.responseText);
+                if (errorResponse.message) {
+                  errorMessage += errorResponse.message;
+                }
+              } catch (e) {
+                errorMessage += "Vui lòng thử lại sau.";
+              }
+              
+              alert(errorMessage);
+            }
+          });
+        });
+      });
+
+      // ===== XÓA SẢN PHẨM KHỎI GIỎ HÀNG =====
+      // Hàm này được đặt ngoài document.ready để có thể gọi từ onclick trong HTML
+      window.removeItem = function (index) {
+        let cart = JSON.parse(localStorage.getItem("cart"));
+        cart.splice(index, 1); // Xóa sản phẩm tại vị trí index
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Cập nhật hiển thị icon giỏ hàng
+        const cartIcon = document.querySelector(".fa-shopping-cart");
+        const cartBadge = cartIcon.nextElementSibling;
+
+        if (cart.length > 0) {
+          cartIcon.style.color = "#ffc107"; // Màu vàng khi có sản phẩm
+          cartBadge.textContent = cart.length;
+        } else {
+          cartIcon.style.color = "white"; // Màu trắng khi không có sản phẩm
+          cartBadge.textContent = "";
+        }
+
+        location.reload(); // Tải lại trang để cập nhật giao diện
+      };
+    </script>
+  </body>
+</html>
